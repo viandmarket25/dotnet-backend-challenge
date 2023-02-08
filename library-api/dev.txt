@@ -1,0 +1,66 @@
+
+
+// :::::
+
+
+
+
+dotnet new web -n library-api
+
+
+
+// :::::: 
+dotnet new webapp -n library-api
+
+// ::::::::
+dotnet dev-certs https --trust
+
+// ::::::
+
+dotnet new webapi -n library-api
+
+Console.WriteLine("What is your name?");
+var name = Console.ReadLine();
+var currentDate = DateTime.Now;
+Console.WriteLine($"{Environment.NewLine}Hello, {name}, on {currentDate:d} at {currentDate:t}!");
+Console.Write($"{Environment.NewLine}Press any key to exit...");
+Console.ReadKey(true);
+
+cmd = new MySqlCommand(
+            "SELECT count(*) FROM admin " + 
+            "WHERE admin_username=@username " + 
+            "AND admin_password=PASSWORD(@passwd)",
+            MySqlConn.conn);
+        cmd.Prepare();
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@passwd", password);
+
+
+// :::::::::
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 6.0.1
+dotnet add package Microsoft.EntityFrameworkCore --version 6.0.4
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.4 
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+
+
+
+
+{
+  "id": 4,
+  "userOfficialId": "User",
+  "name": "Test",
+  "username": "test",
+  "email": "test",
+  "password": "test",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJuYmYiOjE2NzU3MTI0NTYsImV4cCI6MTY3NjMxNzI1NiwiaWF0IjoxNjc1NzEyNDU2fQ.IqlHEJxAOVjZYr4egx7IkE3VSdA2i9sTAqqnexMQBV8"
+}
+
+admin
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjE0IiwiVXNlcm5hbWUiOiIxNCIsIlJvbGUiOiJhZG1pbiIsIm5iZiI6MTY3NTgxNzQ4NCwiZXhwIjoxNjc2NDIyMjg0LCJpYXQiOjE2NzU4MTc0ODR9.5zp5Csfl7LrUNGw_xrG4Tnyjq7iav1b92uJ0-Fn7pjU
+
+bugga
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEyIiwiVXNlcm5hbWUiOiIxMiIsIlJvbGUiOiJ1c2VyIiwibmJmIjoxNjc1ODE3NjIzLCJleHAiOjE2NzY0MjI0MjMsImlhdCI6MTY3NTgxNzYyM30.HiO29pECfsQm6mba51JzK3XLMNIdaUz4ViNAPfLcmHE
