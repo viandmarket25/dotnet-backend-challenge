@@ -12,7 +12,6 @@ var webApplicationOptions = new WebApplicationOptions
     ContentRootPath = AppContext.BaseDirectory,
     Args = args,
 };    
-
 var builder = WebApplication.CreateBuilder(webApplicationOptions);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -24,7 +23,6 @@ builder.Services.AddSwaggerGen();
         // serialize enums as strings in api responses (e.g. Role)
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
-
     builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
     builder.Services.AddScoped<IUserService, UserService>();
 }

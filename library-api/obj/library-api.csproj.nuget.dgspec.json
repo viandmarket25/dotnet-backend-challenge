@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/dotnet-backend/library-api/library-api.csproj": {}
+    "/Users/mac/Documents/dotnet-backend/library-api/library-api.csproj": {}
   },
   "projects": {
-    "/Users/mac/dotnet-backend/library-api/library-api.csproj": {
+    "/Users/mac/Documents/dotnet-backend/library-api/library-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/dotnet-backend/library-api/library-api.csproj",
+        "projectUniqueName": "/Users/mac/Documents/dotnet-backend/library-api/library-api.csproj",
         "projectName": "library-api",
-        "projectPath": "/Users/mac/dotnet-backend/library-api/library-api.csproj",
+        "projectPath": "/Users/mac/Documents/dotnet-backend/library-api/library-api.csproj",
         "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/dotnet-backend/library-api/obj/",
+        "outputPath": "/Users/mac/Documents/dotnet-backend/library-api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/mac/.nuget/NuGet/NuGet.Config"

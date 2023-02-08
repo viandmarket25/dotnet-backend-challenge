@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HGBr9rZFp9rOcWyRawDuKfIOZSIhDeyTP0LJwq0PoYFqqmhsygmyohfW5reHNEdj+t41D3+U6JOR1uM2rW7qAQ==",
+  "dgSpecHash": "CugOW9BTHyKWM2IqeSHgBl4SBXIVjeSfOruHnbwLrhOYe8gqBFmOu5Woq5svCALKvfa2CMp5EoYVGuDcrpZ64Q==",
   "success": true,
-  "projectFilePath": "/Users/mac/dotnet-backend/library-api/library-api.csproj",
+  "projectFilePath": "/Users/mac/Documents/dotnet-backend/library-api/library-api.csproj",
   "expectedPackageFiles": [
     "/Users/mac/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/mac/.nuget/packages/google.protobuf/3.5.1/google.protobuf.3.5.1.nupkg.sha512",

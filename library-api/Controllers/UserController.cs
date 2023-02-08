@@ -183,7 +183,7 @@ public class UsersController : ControllerBase
             "DELETE FROM users WHERE users.ID=@Id",this.connection);
         command.Prepare();
         command.Parameters.AddWithValue("@Id", Id);
-        if (command.ExecuteNonQuery()){
+        if (command.ExecuteNonQuery()>0){
             // :::::::::::::: Create a book Object to hold db data
             requestResponse=new RequestResponse{
                 Message="success",
