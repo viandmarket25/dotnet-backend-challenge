@@ -12,35 +12,45 @@ public class NotificationsController : ControllerBase
 {
     public  MySqlConnection  connection;
     private readonly ILogger<NotificationsController> _logger;
+    private IUserService _userService;
     private RequestResponse requestResponse;
   
-    public NotificationsController(ILogger<NotificationsController> logger)
+    public NotificationsController(ILogger<NotificationsController> logger,IUserService userService)
     {
         var mysqlConnection=new MysqlConnectionPipe();
         mysqlConnection.InitMysqlConnectionPipe ();
         this. connection = mysqlConnection.GetMysqlConnectionPipe();
+        _userService = userService;
         _logger = logger;
-        //return _logger  ;
     }
-    // :::::::::::::::::::: get all book
+    // :::::::::::::::::::: get all notifications
     [HttpGet("notifications")]
-    public List<Notification> GetNotifications()
+    public IActionResult GetNotifications()
     {
         Console.WriteLine("get notifications");
         // :::::::::::::::: Create a list of books
-        List<Notification> notifications=new List<Notification>();
-        string query = "SELECT * FROM books;";
-        using var command = new MySqlCommand(query,this. connection);
+        List<dynamic> notifications=new List<dynamic>();
+        string query = "SELECT * FROM notifications;";
+        using var command = new MySqlCommand(query,this.connection);
         using var reader = command.ExecuteReader();
         while (reader.Read()){
             // :::::::::::::: Create a book Object to hold db data
-            var tempNotification=new Notification();
-        
-            Console.WriteLine(tempNotification);
-            notifications.Add(tempNotification);
+            var notification = new Notification();
+            notification.Id = reader.GetInt32(0);
+            notification.Title = reader.GetString(1);
+            notification.Body =reader.GetString(2);
+            notification.IsRead = reader.GetInt32(0);
+            notification.CustomerId = reader.GetString(1);
+            Console.WriteLine(notification);
+            notifications.Add(notification);
         }
-        return notifications;
-        //.ToArray();
+        requestResponse=new RequestResponse{
+            Message="success",
+            Result=  notifications,
+            Status="success",
+            Code="200"
+        };
+        return Ok(requestResponse);
     }
     // ::::::::::::::::::::::: get a book information
     [HttpGet("notification")]

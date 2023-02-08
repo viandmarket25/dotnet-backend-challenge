@@ -14,14 +14,15 @@ public class ShelfController : ControllerBase
 {
     public  MySqlConnection  connection;
     private readonly ILogger<ShelfController> _logger;
-      private IUserService _userService;
+    private IUserService _userService;
     private RequestResponse requestResponse;
+
     public ShelfController( ILogger<ShelfController> logger,IUserService userService)
     {
         var mysqlConnection=new MysqlConnectionPipe();
         mysqlConnection.InitMysqlConnectionPipe ();
         this. connection = mysqlConnection.GetMysqlConnectionPipe();
-         _userService = userService;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -33,7 +34,7 @@ public class ShelfController : ControllerBase
         // :::::::::::::::: Create a list of books
         List<dynamic> shelves=new List<dynamic>();
         string query = "SELECT * FROM shelves;";
-        using var command = new MySqlCommand(query,this. connection);
+        using var command = new MySqlCommand(query,this.connection);
         using var reader = command.ExecuteReader();
         while (reader.Read()){
             // :::::::::::::: Create a book Object to hold db data
