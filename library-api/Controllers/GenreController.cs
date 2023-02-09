@@ -106,8 +106,7 @@ public class GenreController : ControllerBase
     {
         Console.WriteLine("add genre");
         // :::::::::::::::: Create a list of books
-        // :::::::::::::::::
-        Console.WriteLine("add new genre");
+       
         var queryStatement = "INSERT INTO genres( \n"+
         "ID, NAME) VALUES (@Id,@Name) ";
         // :::::::::::

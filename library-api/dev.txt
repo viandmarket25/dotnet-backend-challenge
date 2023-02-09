@@ -7,7 +7,9 @@
 
 dotnet new web -n library-api
 
+// ::::::
 
+ALTER TABLE books ADD CONSTRAINT shel_id FOREIGN KEY (BOOK_SHELVE_ID) REFERENCES shelves(ID);
 
 // :::::: 
 dotnet new webapp -n library-api

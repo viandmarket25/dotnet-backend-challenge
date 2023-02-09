@@ -165,7 +165,7 @@ public class BooksController : ControllerBase
     {
         Console.WriteLine("add book");
         var queryStatement = "INSERT INTO books( \n"+
-        "ID, ISBN, BOOK_NAME,BOOK_DESCRIPTION,BOOK_COVER_URL,\n"+
+        "BOOK_ID, ISBN, BOOK_NAME,BOOK_DESCRIPTION,BOOK_COVER_URL,\n"+
         "GENRE_ID,CREATED_BY,BOOK_AUTHOR,IS_AVAILABLE,\n"+
         "IS_RESERVED,BOOK_SHELVE_ID, BOOK_EDITION,LIST_DATE,LIST_TIME \n"+
         ") VALUES(@Id,@Isbn,@BookName,@BookDescription,@BookCoverUrl,@GenreId,@CreatedBy,@BookAuthor,@IsAvailable,@IsReserved,@BookShelveId,@BookEdition,@ListDate,@ListTime)";
@@ -216,8 +216,8 @@ public class BooksController : ControllerBase
             Console.WriteLine(book);
 
 
-            return book;
-        }else return new Book();
+           return Ok(new Book());
+        }else return Ok(new Book());
     }
 
      // ::::::::::::::::::::: add book information
@@ -226,7 +226,7 @@ public class BooksController : ControllerBase
     {
         Console.WriteLine("issue book");
         // :::::::::::::::: Create a list of books
-     return new Book();
+     return Ok(new Book());
     }
     // ::::::::::::::::::::: update book information
     [HttpPut ("update-book")]
@@ -247,8 +247,8 @@ public class BooksController : ControllerBase
             // :::::::::::::: Create a book Object to hold db data
             var book=new Book();
 
-            return book;
-        }else return new Book();
+           return Ok(new Book());
+        }else return Ok(new Book());
     }
     // :::::::::::::::::: delete book
     [HttpDelete("delete-book/{Id}")]
@@ -270,7 +270,9 @@ public class BooksController : ControllerBase
             var book=new Book();
            
             Console.WriteLine(book);
-            return book;
-        }else return new Book();
+            return Ok(new Book());
+        }else
+        
+        return Ok(new Book());
     }
 }
