@@ -8,5 +8,8 @@ public class Notification
     public string Body { get; set; } = null!;
     public int IsRead{ get; set; }
     public int CustomerId { get; set; }
+    public string? Date_ { get; set; }
+    public string? Time_ { get; set; }
+
 
 }

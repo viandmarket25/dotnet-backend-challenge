@@ -3,6 +3,7 @@ using library_api.Models;
 using library_api.Config;
 using library_api.Entities;
 using System;
+using library_api.Services;
 using System.Data;
 using MySql.Data.MySqlClient;
 namespace library_api.Controllers;
@@ -40,7 +41,9 @@ public class NotificationsController : ControllerBase
             notification.Title = reader.GetString(1);
             notification.Body =reader.GetString(2);
             notification.IsRead = reader.GetInt32(0);
-            notification.CustomerId = reader.GetString(1);
+            notification.CustomerId = reader.GetInt32(1);
+            notification.Date_ =reader.GetString(2);
+            notification.Time_ =reader.GetString(2);
             Console.WriteLine(notification);
             notifications.Add(notification);
         }
@@ -69,7 +72,10 @@ public class NotificationsController : ControllerBase
             notification.Title = reader.GetString(1);
             notification.Body =reader.GetString(2);
             notification.IsRead = reader.GetInt32(0);
-            notification.CustomerId = reader.GetString(1);
+            notification.CustomerId = reader.GetInt32(1);
+            notification.Date_ =reader.GetString(2);
+            notification.Time_ =reader.GetString(2);
+
             Console.WriteLine(notification);
             notifications.Add(notification);
             requestResponse=new RequestResponse{
