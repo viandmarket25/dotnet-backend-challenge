@@ -9,6 +9,7 @@ Backend task demonstrating Understanding of Software Architecture using Martha's
 3. [Feature](#subparagraph1)
 4. [Tools and Development Kits Required](#subparagraph1)
 5. [Tech Stack](#paragraph2)
+6. [System Design](#paragraph2)
 
 ## Introduction
 
@@ -39,7 +40,7 @@ API Documentation: The application should run on any device, documenting the API
 
 - .Net Core 6 sdk
 - Visual Studio Ide or Visual Studio Code
-- Mysql Server (myysql, mariadb)
+- Mysql Server (mysql, mariadb)
 
 ## Tech Stack
 
@@ -52,6 +53,27 @@ Clone the project
 ```bash
   git clone https://github.com/viandmarket25/dotnet-backend-challenge.git
 ```
+
+Create database "dotnet_library"
+
+CREATE DATABASE `dotnet_library`;
+
+Import dotnet_libray.sql file in config folder to dotnet_libray database.
+
+```
+  Set Database Connection in config MysqlConnectionPipe.cs at line 13 in
+ public string InitMysqlConnectionPipe ()
+  {
+    this.connstring = string.Format("Server=localhost; database={0}; UID=root; password=123456; SslMode = none",      "dotnet_library");
+    this.connection = new MySqlConnection(this.connstring);
+    this.connection.Open(); 
+    return "";
+  }
+```
+
+
+
+
 
 Go to the project directory
 
@@ -79,41 +101,38 @@ run to develop (starts server while listening for changes)
 dotnet watch
 ```
 
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
 
 ## Screenshots
+## System Design
 
-## Tech Stack
+Erd (Entity Relationship Diagram)
 
-**Server:** Node, Express
+<img width="948" alt="Screenshot 2023-02-09 at 16 18 44" src="https://user-images.githubusercontent.com/45737118/217926350-620af5d0-dd31-45a3-8b28-4151a2eaabd6.png">
 
-## Run Locally
+Models
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 48" src="https://user-images.githubusercontent.com/45737118/217926570-ff779c3d-fb04-4a5b-b018-5443852ea523.png">
 
-Clone the project
+<img width="937" alt="Screenshot 2023-02-09 at 00 17 24" src="https://user-images.githubusercontent.com/45737118/217926521-ac0201a9-80a6-45c2-a969-e99db64c7ac2.png">
 
-```bash
-  git clone https://link-to-project
-```
 
-Go to the project directory
 
-```bash
-  cd my-project
-```
+Api Routes
 
-Install dependencies
+<img width="1071" alt="Screenshot 2023-02-10 at 01 28 45" src="https://user-images.githubusercontent.com/45737118/217926603-b3b6bf73-926f-4848-b94e-f6354a56d07b.png">
 
-```bash
-npm install
-```
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 03" src="https://user-images.githubusercontent.com/45737118/217926622-bd0755ab-d242-4588-bc14-c2f5ee078221.png">
 
-Start the server
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 13" src="https://user-images.githubusercontent.com/45737118/217926632-255d35e3-c92d-47d5-bfb9-4a3b0dd4fbed.png">
 
-```bash
-npm run start
-```
+
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 26" src="https://user-images.githubusercontent.com/45737118/217926656-b17708d8-5115-4323-8abb-bf7d877b2e9b.png">
+
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 36" src="https://user-images.githubusercontent.com/45737118/217926677-0e4435f7-09c3-4875-86a9-f175e170195b.png">
+
+<img width="1071" alt="Screenshot 2023-02-10 at 01 29 48" src="https://user-images.githubusercontent.com/45737118/217926723-75bfbd7f-8fe1-460a-a3f6-46f2d4b08cf6.png">
+
+
+
 
 ## License
 
