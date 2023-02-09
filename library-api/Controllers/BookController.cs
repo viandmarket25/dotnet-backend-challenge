@@ -221,7 +221,10 @@ public class BooksController : ControllerBase
                 var currentTime = TimeOnly.FromDateTime(DateTime.Now);
                 // ::::::::: add 24 hours
                 var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)); 
-                var expTime = new TimeOnly(08, 00);
+                DateTime currentTime = DateTime.Now;
+                // :::::::: 60 minutes (1 hour x 24 = 25 hours, 1 day)
+                DateTime expTime = currentTime.AddMinutes(60*24);
+
                 MySqlCommand command;
                 command = new MySqlCommand(queryStatement,this.connection);
                 command.Prepare();
@@ -233,7 +236,6 @@ public class BooksController : ControllerBase
                 command.Parameters.AddWithValue("@ReserveExpiryTime", expTime);
                 command.Parameters.AddWithValue("@ReserveDate", expDate);
                 command.Parameters.AddWithValue("@ReserveTime", currentTime);
-        
                 command.ExecuteNonQuery();
                 // :::::::::::::::: set book to reserved
                 SetBookReserved setBookReserved = new SetBookReserved();
@@ -243,7 +245,6 @@ public class BooksController : ControllerBase
         }else{
             // :::::::::::: book has already been issued
             return Ok(new Book());
-
         }
 
     }
@@ -329,32 +330,25 @@ public class BooksController : ControllerBase
         return Ok(new Book());
     }
 
-
     // ::::::::::::::::::::: add book information
     [HttpPost("return-book")]
-    public  IActionResult ReturnBook(ReservedBooks reservedBooks)
+    public  IActionResult ReturnBook(IssueReserveBook issueReserveBook)
     {
-        Console.WriteLine("reserve book");
-        // :::::::::::::::: Create a list of books
-        MySqlCommand command;
-        command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
-        command.Prepare();
-        //command.Parameters.AddWithValue("@Id", Id);
-       
-        //using var command = new MySqlCommand(query,this. connection);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            var book=new Book();
-           
-            Console.WriteLine(book);
-
-
-           return Ok(new Book());
-        }else return Ok(new Book());
+        Console.WriteLine("return book");
+        // :::::::::::::::: return an issued book
+        // :::::: remove reserve record
+        RemoveReservedBook RemoveReservedBook =new RemoveReservedBook();
+        removeReservedBook.removeReserved( issueReserveBook.BookId);
+        // :::::: remove issued record
+        RemoveIssuedBook RemoveIssuedBook=new RemoveIssuedBook();
+        removeIssuedBook.removeIssued(issueReserveBook.BookId);
+        // :::::: set available
+        SetBookAvailable setBookAvailable = new SetBookAvailable();
+        setBookAvailable.setAvailable(issueReserveBook.BookId);
+        // :::::: set iunreserved
+        SetBookReserved setBookReserved = new SetBookReserved();
+        setBookReserved.setReserved(issueReserveBook.BookId);
     }
-
 
     // ::::::::::::::::::::: update book information
     [HttpPut ("update-book")]
