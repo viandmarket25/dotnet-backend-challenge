@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using library_api.Models;
 using library_api.Config;
+using library_api.Entities;
+using library_api.Helpers;
 using System;
 using System.Data;
 using library_api.Services;
@@ -14,9 +16,10 @@ public class BooksController : ControllerBase
 {
     public  MySqlConnection  connection;
     private readonly ILogger<BooksController> _logger;
+        private IUserService _userService;
     private RequestResponse requestResponse;
   
-    public BooksController(ILogger<BooksController> logger)
+    public BooksController(ILogger<BooksController> logger,IUserService userService)
     {
         var mysqlConnection=new MysqlConnectionPipe();
         mysqlConnection.InitMysqlConnectionPipe ();
@@ -160,6 +163,7 @@ public class BooksController : ControllerBase
     }
     
     // ::::::::::::::::::::: add book information
+    [Authorize(Role.Admin)]
     [HttpPost("add-book")]
     public IActionResult AddBook(Book book)
     {
@@ -219,6 +223,33 @@ public class BooksController : ControllerBase
            return Ok(new Book());
         }else return Ok(new Book());
     }
+
+    // ::::::::::::::::::::: add book information
+    [HttpPost("reserve-book")]
+    public  IActionResult ReturnBook(ReservedBooks reservedBooks)
+    {
+        Console.WriteLine("reserve book");
+        // :::::::::::::::: Create a list of books
+        MySqlCommand command;
+        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
+        command  = new MySqlCommand(
+            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
+        command.Prepare();
+        //command.Parameters.AddWithValue("@Id", Id);
+       
+        //using var command = new MySqlCommand(query,this. connection);
+        using var reader = command.ExecuteReader();
+        if (reader.Read()){
+            // :::::::::::::: Create a book Object to hold db data
+            var book=new Book();
+           
+            Console.WriteLine(book);
+
+
+           return Ok(new Book());
+        }else return Ok(new Book());
+    }
+
 
      // ::::::::::::::::::::: add book information
     [HttpPost("issue-book")]
