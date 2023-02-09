@@ -373,24 +373,58 @@ public class BooksController : ControllerBase
         }else return Ok(new Book());
     }
     // :::::::::::::::::: delete book
+     [Authorize(Role.Admin)]
     [HttpDelete("delete-book/{Id}")]
     public  IActionResult DeleteBook(int Id)
     {
         Console.WriteLine("delete book");
-        // :::::::::::::::: Create a list of books
-        MySqlCommand command;
-        command  = new MySqlCommand(
-            "DELETE FROM books WHERE books.BOOK_ID=@Id",this.connection);
-        command.Prepare();
-        command.Parameters.AddWithValue("@Id", Id);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            var book=new Book();
-           
-            Console.WriteLine(book);
-            return Ok(new Book());
-        }else
-        return Ok(new Book());
+        BookIsReserved bookIsReserved=new BookIsReserved();
+        BookIsIssued bookIsIssued = new BookIsIssued();
+        BookIsReservedBySameUser bookIsReservedBySameUser = new BookIsReservedBySameUser();
+        // :::::::: check is book is available
+        // :::::::: then check if it is reserved, if it is reserved by same user then issue
+        List<dynamic> books=new List<dynamic>();
+        if(!bookIsIssued.checkBookIsIssued(issueReserveBook.BookId)){
+            // :::::: remove reserve record if there is any
+            RemoveReservedBook RemoveReservedBook =new RemoveReservedBook();
+            removeReservedBook.removeReserved( issueReserveBook.BookId);
+            // :::::: delete book record
+            MySqlCommand command;
+
+            var book = new book();
+            command  = new MySqlCommand(
+                "DELETE FROM books WHERE books.BOOK_ID=@Id",this.connection);
+            command.Prepare();
+            command.Parameters.AddWithValue("@Id", Id);
+            using var reader = command.ExecuteReader();
+            if (command.ExecuteNonQuery()>0){
+                // :::::::::::::: Create a book Object to hold db data
+                requestResponse=new RequestResponse{
+                    Message="success, book is now deleted",
+                    Result= books,
+                    Status="success",
+                    Code="200"
+                };
+                return Ok(requestResponse); 
+            }else{
+                requestResponse=new RequestResponse{
+                    Message="failed, Could not delete",
+                    Result= books,
+                    Status="failed",
+                    Code="200"
+                };
+                return Ok(requestResponse);
+            }
+        }else{
+            requestResponse=new RequestResponse{
+                    Message="failed, sorry you cannot delete this book at the moment",
+                    Result= books,
+                    Status="failed",
+                    Code="200"
+                };
+            return Ok(requestResponse);
+
+        }
+
     }
 }
