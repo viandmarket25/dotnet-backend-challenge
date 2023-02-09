@@ -2,9 +2,16 @@
 
 Backend task demonstrating Understanding of Software Architecture using Martha's Book Library
 
-## Description
+# Table of contents
 
-Martha owns a local library, her customers often complain about coming to the book store and not finding the books they came to borrow. To prevent this, customers currently call the library and ask if the books they are looking for are available. Typically, over the call:
+1. [Introduction](#introduction)
+2. [Book Borrowing and Reservation process in old system](#paragraph1)
+3. [Feature](#subparagraph1)
+4. [Tech Stack](#paragraph2)
+
+## Introduction
+
+Martha owns a local library, her customers often complain about coming to the book store and not finding the books they came to borrow. To prevent this, customers currently call the library and ask if the books they are looking for are available. Typically, over the call.
 
 ## Book Borrowing and Reservation process in old system
 
@@ -19,111 +26,6 @@ In your implementation, take into account the following key details:
 Authentication & Authorization: Since the application will most likely store customer data, some security constraints must be enforced on who has access to the data.
 API Documentation: The application should run on any device, documenting the API would be important as it would allow any frontend engineer to make the app available to customers using different devices.
 
-## Bonus
-
-For books that are reserved / currently borrowed out, customers should be able to request to be notified once the book is now available in the library. In this initial iteration, the notification could be persisted in some notifications table / storage at the time the book becomes available.
-
-What Tools Can You Use?
-
-Use this opportunity to showcase your understanding of software architecture and .NET Core.
-You may use whatever persistent storage you think is best.
-Demonstrate your understanding of OAuth and how it can be used to secure APIs. You can use your own Identity Server or leverage an existing one.
-
-## Structure
-
-You can checkout prebuilt components and templates by clicking on the menu icon
-on the top left corner of the navbar.
-
-## Demo
-
-Insert gif or link to demo
-
-# Project Title
-
-Dotnet Backend Challenge
-
-# Table of contents
-
-1. [Introduction](#introduction)
-2. [Some paragraph](#paragraph1)
-   1. [Sub paragraph](#subparagraph1)
-3. [Another paragraph](#paragraph2)
-
-## Screenshots
-
-## Tech Stack
-
-**Server:** .Net Core 6, VsCode, Mysql Server, Jwt(Authentication Implementation), Role Based Authorization
-
-## Features
-
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
-
-## Lessons Learned
-
-What did you learn while building this project? What challenges did you face and how did you overcome t
-
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://link-to-project
-```
-
-Go to the project directory
-
-```bash
-  cd my-project
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Start the server
-
-```bash
-npm run start
-```
-
-## Feedback
-
-If you have any feedback, please reach out to us at fake@fake.com
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
-
-# Project Title
-
-This is an example of an in-depth ReadMe.
-
-## Badges
-
-Add badges from somewhere like: [shields.io](https://shields.io/)  
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://choosealicense.com/licenses/gpl-3.0/)  
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
-
-# Table of contents
-
-1. [Introduction](#introduction)
-2. [Some paragraph](#paragraph1)
-   1. [Sub paragraph](#subparagraph1)
-3. [Another paragraph](#paragraph2)
-
-## Screenshots
-
-## Tech Stack
-
-**Server:** Node, Express
-
 ## Features
 
 - User Management
@@ -131,6 +33,44 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 - Genre Management
 - Shelf Management
 - Notification
+
+## Tech Stack
+
+**Server:** .Net Core 6, VsCode, Mysql Server, Jwt(Authentication Implementation), Role Based Authorization
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/viandmarket25/dotnet-backend-challenge.git
+```
+
+Go to the project directory
+
+```bash
+  cd libray_api
+```
+
+Install dependencies
+
+```run to test (starts server)
+dotnet run
+```
+
+```run to develop  (starts server while listening for changes)
+dotnet watch
+```
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+## Screenshots
+
+## Tech Stack
+
+**Server:** Node, Express
 
 ## Run Locally
 
