@@ -7,7 +7,8 @@ Backend task demonstrating Understanding of Software Architecture using Martha's
 1. [Introduction](#introduction)
 2. [Book Borrowing and Reservation process in old system](#paragraph1)
 3. [Feature](#subparagraph1)
-4. [Tech Stack](#paragraph2)
+4. [Tools and Development Kits Required](#subparagraph1)
+5. [Tech Stack](#paragraph2)
 
 ## Introduction
 
@@ -33,6 +34,12 @@ API Documentation: The application should run on any device, documenting the API
 - Genre Management
 - Shelf Management
 - Notification
+
+## Tools and Development Kits Required
+
+- .Net Core 6 sdk
+- Visual Studio Ide or Visual Studio Code
+- Mysql Server (myysql, mariadb)
 
 ## Tech Stack
 
