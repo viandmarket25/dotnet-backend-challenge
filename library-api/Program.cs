@@ -46,5 +46,5 @@ app.UseCors(x => x
 // custom jwt auth middleware
 app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
-app.Run();
+app.Run("http://localhost:7215");
 //app.Run("http://localhost:4000");

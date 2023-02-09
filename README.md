@@ -66,14 +66,10 @@ Import dotnet_libray.sql file in config folder to dotnet_libray database.
   {
     this.connstring = string.Format("Server=localhost; database={0}; UID=root; password=123456; SslMode = none",      "dotnet_library");
     this.connection = new MySqlConnection(this.connstring);
-    this.connection.Open(); 
+    this.connection.Open();
     return "";
   }
 ```
-
-
-
-
 
 Go to the project directory
 
@@ -101,8 +97,14 @@ run to develop (starts server while listening for changes)
 dotnet watch
 ```
 
+goto url/swagger/index.html to test Api
+
+```run
+  visit http://localhost:7215/swagger/index.html
+```
 
 ## Screenshots
+
 ## System Design
 
 Erd (Entity Relationship Diagram)
@@ -114,8 +116,6 @@ Models
 
 <img width="937" alt="Screenshot 2023-02-09 at 00 17 24" src="https://user-images.githubusercontent.com/45737118/217926521-ac0201a9-80a6-45c2-a969-e99db64c7ac2.png">
 
-
-
 Api Routes
 
 <img width="1071" alt="Screenshot 2023-02-10 at 01 28 45" src="https://user-images.githubusercontent.com/45737118/217926603-b3b6bf73-926f-4848-b94e-f6354a56d07b.png">
@@ -124,15 +124,11 @@ Api Routes
 
 <img width="1071" alt="Screenshot 2023-02-10 at 01 29 13" src="https://user-images.githubusercontent.com/45737118/217926632-255d35e3-c92d-47d5-bfb9-4a3b0dd4fbed.png">
 
-
 <img width="1071" alt="Screenshot 2023-02-10 at 01 29 26" src="https://user-images.githubusercontent.com/45737118/217926656-b17708d8-5115-4323-8abb-bf7d877b2e9b.png">
 
 <img width="1071" alt="Screenshot 2023-02-10 at 01 29 36" src="https://user-images.githubusercontent.com/45737118/217926677-0e4435f7-09c3-4875-86a9-f175e170195b.png">
 
 <img width="1071" alt="Screenshot 2023-02-10 at 01 29 48" src="https://user-images.githubusercontent.com/45737118/217926723-75bfbd7f-8fe1-460a-a3f6-46f2d4b08cf6.png">
-
-
-
 
 ## License
 
