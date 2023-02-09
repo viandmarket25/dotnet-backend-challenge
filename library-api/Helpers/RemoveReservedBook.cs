@@ -19,29 +19,16 @@ public class RemoveReservedBook
         Console.WriteLine("remove reserved book: "+Id);
         MySqlCommand command;
         List<dynamic> books=new List<dynamic>();
-        var book = new book();
         command = new MySqlCommand(
             "DELETE FROM reserved_books WHERE reserved_books.BOOK_ID=@Id",this.connection);
         command.Prepare();
         command.Parameters.AddWithValue("@Id", Id);
         using var reader = command.ExecuteReader();
         if (command.ExecuteNonQuery()>0){
-            // :::::::::::::: Create a book Object to hold db data
-            requestResponse=new RequestResponse{
-                Message="success, book can now be reserved",
-                Result= books,
-                Status="success",
-                Code="200"
-            };
-            return Ok(requestResponse); 
+            // :::::::::::::: Create a book Object to hold db data         
+            return true; 
         }else{
-            requestResponse=new RequestResponse{
-                Message="failed, Could not update",
-                Result= books,
-                Status="failed",
-                Code="200"
-            };
-            return Ok(requestResponse);
+            return false;
         }
     }
  

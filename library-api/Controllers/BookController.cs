@@ -198,7 +198,7 @@ public class BooksController : ControllerBase
 
     // ::::::::::::::::::::: add book information
     [HttpPost("reserve-book")]
-    public  IActionResult ReserveBook(ReservedBooks reservedBooks)
+    public  IActionResult ReserveBook(IssueReserveBook issueReserveBook)
     {
         Console.WriteLine("reserve book");
         // :::::::::::::::: Create a list of books
@@ -218,7 +218,6 @@ public class BooksController : ControllerBase
                 ") VALUES(@Id,@ReservedBy,@ReservedFor,@BookId,@ReserveExpiryDate,@ReserveExpiryTime,@ReserveDate,@ReserveTime)";
                 // :::::::::::
                 var currentDate = DateOnly.FromDateTime(DateTime.Now);
-                var currentTime = TimeOnly.FromDateTime(DateTime.Now);
                 // ::::::::: add 24 hours
                 var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)); 
                 DateTime currentTime = DateTime.Now;
@@ -246,10 +245,11 @@ public class BooksController : ControllerBase
             // :::::::::::: book has already been issued
             return Ok(new Book());
         }
+        return Ok(new Book());
 
     }
 
-     // ::::::::::::::::::::: add book information
+    // ::::::::::::::::::::: add book information
     [HttpPost("issue-book")]
     public  IActionResult IssueBook(IssueReserveBook issueReserveBook)
     {
@@ -337,10 +337,10 @@ public class BooksController : ControllerBase
         Console.WriteLine("return book");
         // :::::::::::::::: return an issued book
         // :::::: remove reserve record
-        RemoveReservedBook RemoveReservedBook =new RemoveReservedBook();
+        RemoveReservedBook removeReservedBook =new RemoveReservedBook();
         removeReservedBook.removeReserved( issueReserveBook.BookId);
         // :::::: remove issued record
-        RemoveIssuedBook RemoveIssuedBook=new RemoveIssuedBook();
+        RemoveIssuedBook removeIssuedBook=new RemoveIssuedBook();
         removeIssuedBook.removeIssued(issueReserveBook.BookId);
         // :::::: set available
         SetBookAvailable setBookAvailable = new SetBookAvailable();
@@ -348,6 +348,7 @@ public class BooksController : ControllerBase
         // :::::: set iunreserved
         SetBookReserved setBookReserved = new SetBookReserved();
         setBookReserved.setReserved(issueReserveBook.BookId);
+        return Ok(new Book());
     }
 
     // ::::::::::::::::::::: update book information
@@ -373,9 +374,9 @@ public class BooksController : ControllerBase
         }else return Ok(new Book());
     }
     // :::::::::::::::::: delete book
-     [Authorize(Role.Admin)]
+    [Authorize(Role.Admin)]
     [HttpDelete("delete-book/{Id}")]
-    public  IActionResult DeleteBook(int Id)
+    public  IActionResult DeleteBook(IssueReserveBook issueReserveBook)
     {
         Console.WriteLine("delete book");
         BookIsReserved bookIsReserved=new BookIsReserved();
@@ -386,16 +387,14 @@ public class BooksController : ControllerBase
         List<dynamic> books=new List<dynamic>();
         if(!bookIsIssued.checkBookIsIssued(issueReserveBook.BookId)){
             // :::::: remove reserve record if there is any
-            RemoveReservedBook RemoveReservedBook =new RemoveReservedBook();
+            RemoveReservedBook removeReservedBook =new RemoveReservedBook();
             removeReservedBook.removeReserved( issueReserveBook.BookId);
             // :::::: delete book record
             MySqlCommand command;
-
-            var book = new book();
             command  = new MySqlCommand(
                 "DELETE FROM books WHERE books.BOOK_ID=@Id",this.connection);
             command.Prepare();
-            command.Parameters.AddWithValue("@Id", Id);
+            command.Parameters.AddWithValue("@Id", issueReserveBook.BookId);
             using var reader = command.ExecuteReader();
             if (command.ExecuteNonQuery()>0){
                 // :::::::::::::: Create a book Object to hold db data

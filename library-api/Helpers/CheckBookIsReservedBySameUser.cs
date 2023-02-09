@@ -18,7 +18,7 @@ public class BookIsReservedBySameUser
         
     }
     public bool checkBookIsReservedBySameUser(IssueReserveBook issueReserveBook){
-        Console.WriteLine("check book reserved: "+  issueReserveBook issueReserveBook.BookId);
+        Console.WriteLine("check book reserved: "+ issueReserveBook.BookId);
         MySqlCommand command;
         command  = new MySqlCommand(
             "SELECT * FROM books WHERE books.BOOK_ID=@Id and books.IS_RESERVED=1 and books.RESERVED_FOR=@UserId ",this.connection);

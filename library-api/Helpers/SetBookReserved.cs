@@ -19,7 +19,6 @@ public class SetBookReserved
         Console.WriteLine("set book Reserved: "+Id);
         MySqlCommand command;
         List<dynamic> books=new List<dynamic>();
-        var book = new book();
         command  = new MySqlCommand(
             "UPDATE books SET books.IS_RESERVED=1 WHERE books.BOOK_ID=@Id",this.connection);
         command.Prepare();
@@ -27,28 +26,16 @@ public class SetBookReserved
         using var reader = command.ExecuteReader();
         if (command.ExecuteNonQuery()>0){
             // :::::::::::::: Create a book Object to hold db data
-            requestResponse=new RequestResponse{
-                Message="success, book is now Reserved",
-                Result= books,
-                Status="success",
-                Code="200"
-            };
-            return Ok(requestResponse); 
+         
+            return true; 
         }else{
-            requestResponse=new RequestResponse{
-                Message="failed, Could not update",
-                Result= books,
-                Status="failed",
-                Code="200"
-            };
-            return Ok(requestResponse);
+            return false;
         }
     }
     public bool setUnReserved(int Id){
         Console.WriteLine("set book UnReserved: "+Id);
         MySqlCommand command;
         List<dynamic> books=new List<dynamic>();
-        var book = new book();
         command  = new MySqlCommand(
             "UPDATE books SET books.IS_RESERVED=0 WHERE books.BOOK_ID=@Id",this.connection);
         command.Prepare();
@@ -56,21 +43,10 @@ public class SetBookReserved
         using var reader = command.ExecuteReader();
         if (command.ExecuteNonQuery()>0){
             // :::::::::::::: Create a book Object to hold db data
-            requestResponse=new RequestResponse{
-                Message="success, book is now UnReserved",
-                Result= books,
-                Status="success",
-                Code="200"
-            };
-            return Ok(requestResponse); 
+            return true; 
         }else{
-            requestResponse=new RequestResponse{
-                Message="failed, Could not update",
-                Result= books,
-                Status="failed",
-                Code="200"
-            };
-            return Ok(requestResponse);
+
+            return false;
         }
     }
 }
