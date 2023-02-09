@@ -264,14 +264,15 @@ public class BooksController : ControllerBase
                 // ::::::::: issue book
                 Console.WriteLine("issue book");
                 var queryStatement = "INSERT INTO issued_books( \n"+
-                "ID, ISSUED_BY, ISSUED_TO,BOOK_ID,EXPIRY_DATE,\n"+
-                "DATE_ISSUED,TIME_ISSUED,RETURN_DATE,RETURN_TIME,\n"+
-                ") VALUES(@Id,@IssuedBy,@Issuedto,@BookId,@ExpiryDate,@DateIssued,@TimeIssued,@ReturnDate,@ReturnTime)";
+                "ID, ISSUED_BY, ISSUED_TO, BOOK_ID, EXPIRY_DATE,\n"+
+                "DATE_ISSUED, TIME_ISSUED, RETURN_DATE, RETURN_TIME\n"+
+                ") VALUES(@Id, @IssuedBy, @IssuedTo, @BookId, @ExpiryDate, @DateIssued, @TimeIssued, @ReturnDate, @ReturnTime)";
                 // :::::::::::
                 var currentDate = DateOnly.FromDateTime(DateTime.Now);
                 var currentTime = TimeOnly.FromDateTime(DateTime.Now);
                 var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)); 
                 var expTime = new TimeOnly(08, 00);
+
                 MySqlCommand command;
                 command = new MySqlCommand(queryStatement,this.connection);
                 command.Prepare();
@@ -296,8 +297,8 @@ public class BooksController : ControllerBase
                 Console.WriteLine("issue book");
                 var queryStatement = "INSERT INTO issued_books( \n"+
                 "ID, ISSUED_BY, ISSUED_TO,BOOK_ID,EXPIRY_DATE,\n"+
-                "DATE_ISSUED,TIME_ISSUED,RETURN_DATE,RETURN_TIME,\n"+
-                ") VALUES(@Id,@IssuedBy,@Issuedto,@BookId,@ExpiryDate,@DateIssued,@TimeIssued,@ReturnDate,@ReturnTime)";
+                "DATE_ISSUED,TIME_ISSUED,RETURN_DATE,RETURN_TIME\n"+
+                ") VALUES(@Id,@IssuedBy,@IssuedTo,@BookId,@ExpiryDate,@DateIssued,@TimeIssued,@ReturnDate,@ReturnTime)";
                 // :::::::::::
                 var currentDate = DateOnly.FromDateTime(DateTime.Now);
                 var currentTime = TimeOnly.FromDateTime(DateTime.Now);
@@ -349,6 +350,130 @@ public class BooksController : ControllerBase
         SetBookReserved setBookReserved = new SetBookReserved();
         setBookReserved.setReserved(issueReserveBook.BookId);
         return Ok(new Book());
+    }
+
+     // ::::::::::::::::::::: add book information
+    [HttpGet("get-issued-books{UserId}")]
+    public  IActionResult GetIssuedBooks(int UserId)
+    {
+        Console.WriteLine("get issued books ");
+        // :::::::::::::::: return an issued book
+        MySqlCommand command;
+        List<dynamic> books=new List<dynamic>();
+        List<dynamic> issuedBooks=new List<dynamic>();
+        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
+        command  = new MySqlCommand(
+            "SELECT * FROM books JOIN issued_books on books.BOOK_ID=issued_books.BOOK_ID;", this.connection);
+        command.Prepare();
+        using var reader = command.ExecuteReader();
+        if (reader.Read()){
+            // :::::::::::::: Create a book Object to hold db data
+            var book=new IssuedBooks();
+            book.Isbn=reader.GetString(1);
+            book.BookName=reader.GetString(2);
+            book.BookDescription=reader.GetString(3);
+            book.BookCoverUrl=reader.GetString(4);
+            book.GenreId=reader.GetInt32(5);
+            book.CreatedBy=reader.GetInt32(6);
+            book.BookAuthor=reader.GetString(7);
+            book.IsAvailable=reader.GetInt32(8);
+            book.IsReserved=reader.GetInt32(9);
+            book.BookShelveId=reader.GetInt32(10);
+            book.BookEdition=reader.GetString(11);
+            book.ListDate =reader.GetString(12);
+            book.ListTime =reader.GetString(13);
+            book.IssuedBookId = reader.GetInt32(14);
+            book.IssuedBy = reader.GetInt32(15);
+            book.IssuedTo = reader.GetInt32(16);
+            book.BookId = reader.GetInt32(17);
+            book.ExpiryDate = reader.GetString(18);
+            book.DateIssued = reader.GetString(19);
+            book.TimeIssued = reader.GetString(20);
+            book.ReturnDate = reader.GetString(21);
+            book.ReturnTime = reader.GetString(22);
+        
+            Console.WriteLine(book);
+            issuedBooks.Add(book);
+            requestResponse=new RequestResponse{
+                Message="success",
+                Result= issuedBooks,
+                Status="success",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }else{
+            requestResponse=new RequestResponse{
+                Message="failed, no record found",
+                Result= books,
+                Status="failed",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }
+        return Ok(new Book());
+    }
+
+     // ::::::::::::::::::::: add book information
+    [HttpGet("get-reserved-books{UserId}")]
+    public  IActionResult GetReservedBooks(int UserId)
+    {
+        Console.WriteLine("get reserved books");
+        // :::::::::::::::: return an issued book
+        // :::::: remove reserve record
+         MySqlCommand command;
+        List<dynamic> books=new List<dynamic>();
+        List<dynamic> issuedBooks=new List<dynamic>();
+        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
+        command  = new MySqlCommand(
+            "SELECT * FROM books JOIN reserved_books on books.BOOK_ID=reserved_books.BOOK_ID;", this.connection);
+        command.Prepare();
+        using var reader = command.ExecuteReader();
+        if (reader.Read()){
+            // :::::::::::::: Create a book Object to hold db data
+            var book=new ReservedBooks();
+            book.Isbn=reader.GetString(1);
+            book.BookName=reader.GetString(2);
+            book.BookDescription=reader.GetString(3);
+            book.BookCoverUrl=reader.GetString(4);
+            book.GenreId=reader.GetInt32(5);
+            book.CreatedBy=reader.GetInt32(6);
+            book.BookAuthor=reader.GetString(7);
+            book.IsAvailable=reader.GetInt32(8);
+            book.IsReserved=reader.GetInt32(9);
+            book.BookShelveId=reader.GetInt32(10);
+            book.BookEdition=reader.GetString(11);
+            book.ListDate =reader.GetString(12);
+            book.ListTime =reader.GetString(13);
+            book.ReservedBookId = reader.GetInt32(14);
+            book.ReservedBy = reader.GetInt32(15);
+            book.ReservedFor = reader.GetInt32(16);
+            book.BookId = reader.GetInt32(17);
+            book.ReserveExpiryDate = reader.GetString(18);
+            book.ReserveExpiryTme = reader.GetString(19);
+            book.ReserveDate  = reader.GetString(20);
+            book.ReserveTime = reader.GetString(21);
+    
+            Console.WriteLine(book);
+            issuedBooks.Add(book);
+            requestResponse=new RequestResponse{
+                Message="success",
+                Result= issuedBooks,
+                Status="success",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }else{
+            requestResponse=new RequestResponse{
+                Message="failed, no record found",
+                Result= books,
+                Status="failed",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }
+
+        return Ok(new Book());
+       
     }
 
     // ::::::::::::::::::::: update book information
