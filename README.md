@@ -1,20 +1,15 @@
 # Dotnet Backend Engineer Challenge
 
-Backend task demonstrating Understanding of Software Architeture using Martha's Book Library
+Backend task demonstrating Understanding of Software Architecture using Martha's Book Library
 
-## Get Started 🚀
+## Description
 
 To get started, hit the 'clear' button at the top of the editor!
 
-## Prebuilt Components/Templates 🔥
+## Structure
 
 You can checkout prebuilt components and templates by clicking on the menu icon
 on the top left corner of the navbar.
-
-## Save Readme ✨
-
-Once you're done, click on the save button to directly save your Readme to your
-project's root directory!
 
 ## Demo
 
@@ -23,13 +18,6 @@ Insert gif or link to demo
 # Project Title
 
 Dotnet Backend Challenge
-
-## Badges
-
-Add badges from somewhere like: [shields.io](https://shields.io/)  
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://choosealicense.com/licenses/gpl-3.0/)  
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
 
 # Table of contents
 
@@ -40,13 +28,9 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ## Screenshots
 
-![App Screenshot](https://lanecdr.org/wp-content/uploads/2019/08/placeholder.png)
-
 ## Tech Stack
 
-**Client:** React, Redux, TailwindCSS
-
-**Server:** Node, Express
+**Server:** .Net Core 6, VsCode, Mysql Server, Jwt(Authentication Implementation), Role Based Authorization
 
 ## Features
 
