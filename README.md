@@ -59,11 +59,21 @@ Go to the project directory
   cd libray_api
 ```
 
-Install dependencies
+build dependencies
+
+run to test (starts server)
+
+```run to test (starts server)
+dotnet build
+```
+
+run to test (starts server)
 
 ```run to test (starts server)
 dotnet run
 ```
+
+run to develop (starts server while listening for changes)
 
 ```run to develop  (starts server while listening for changes)
 dotnet watch
