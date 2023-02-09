@@ -26,11 +26,11 @@ public class BooksController : ControllerBase
     }
     // :::::::::::::::::::: get all book
     [HttpGet("books")]
-    public List<Book> Get()
+    public  IActionResult Get()
     {
         Console.WriteLine("get books");
         // :::::::::::::::: Create a list of books
-        List<Book> books=new List<Book>();
+        List<dynamic> books=new List<dynamic>();
         string query = "SELECT * FROM books;";
         using var command = new MySqlCommand(query,this. connection);
         using var reader = command.ExecuteReader();
@@ -39,12 +39,12 @@ public class BooksController : ControllerBase
             var tempBook=new Book();
             tempBook.Id=reader.GetInt32(0);
             tempBook.Isbn=reader.GetString(1);
-            tempBook. BookName=reader.GetString(2);
+            tempBook.BookName=reader.GetString(2);
             tempBook.BookDescription=reader.GetString(3);
             tempBook.BookCoverUrl=reader.GetString(4);
             tempBook.GenreId=reader.GetInt32(5);
-            tempBook. CreatedBy=reader.GetInt32(6);
-            tempBook. BookAuthor=reader.GetString(7);
+            tempBook.CreatedBy=reader.GetInt32(6);
+            tempBook.BookAuthor=reader.GetString(7);
             tempBook.IsAvailable=reader.GetInt32(8);
             tempBook.IsReserved=reader.GetInt32(9);
             tempBook.BookShelveId=reader.GetInt32(10);
@@ -54,17 +54,23 @@ public class BooksController : ControllerBase
             Console.WriteLine( tempBook);
             books.Add(tempBook);
         }
-        return books;
-        //.ToArray();
+        requestResponse=new RequestResponse{
+            Message="success",
+            Result= books,
+            Status="success",
+            Code="200"
+        };
+        return Ok(requestResponse);
+      
     }
     // ::::::::::::::::::::::: search a book information
     [HttpGet("search-books")]
-    public async Task<ActionResult<List<Book>>>  SearchBook(string name)
+    public IActionResult  SearchBook(string name)
     {
         Console.WriteLine("search books");
         // :::::::::::::::: Create a list of books
         MySqlCommand command;
-        List<Book> books=new List<Book>();
+        List<dynamic> books=new List<dynamic>();
         command  = new MySqlCommand(
             "SELECT * FROM books WHERE BOOK_NAME LIKE '%'@name'%' ",this.connection);
         command.Prepare();
@@ -90,15 +96,23 @@ public class BooksController : ControllerBase
             book.ListTime =reader.GetString(13);
             Console.WriteLine(book);
             books.Add(book);
-        } return books;
+        }
+        requestResponse=new RequestResponse{
+            Message="success",
+            Result= books,
+            Status="success",
+            Code="200"
+        };
+        return Ok(requestResponse);
     }
     // ::::::::::::::::::::::: get a book information
     [HttpGet("book")]
-    public Book GetBook(int Id)
+    public  IActionResult GetBook(int Id)
     {
         Console.WriteLine("get book");
         // :::::::::::::::: Create a list of books
         MySqlCommand command;
+        List<dynamic> books=new List<dynamic>();
         //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
         command  = new MySqlCommand(
             "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
@@ -125,50 +139,64 @@ public class BooksController : ControllerBase
             book.ListDate =reader.GetString(12);
             book.ListTime =reader.GetString(13);
             Console.WriteLine(book);
-            return book;
-        }else return new Book();
+            books.Add(book);
+            requestResponse=new RequestResponse{
+                Message="success",
+                Result= books,
+                Status="success",
+                Code="200"
+            };
+            return Ok(requestResponse);
+            
+        }else{
+            requestResponse=new RequestResponse{
+                Message="failed, no record found",
+                Result= books,
+                Status="failed",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        } 
     }
     
     // ::::::::::::::::::::: add book information
     [HttpPost("add-book")]
-    public Book AddBook(Book book)
+    public IActionResult AddBook(Book book)
     {
-        Console.WriteLine("get book");
-        // :::::::::::::::: Create a list of books
+        Console.WriteLine("add book");
+        var queryStatement = "INSERT INTO books( \n"+
+        "ID, ISBN, BOOK_NAME,BOOK_DESCRIPTION,BOOK_COVER_URL,\n"+
+        "GENRE_ID,CREATED_BY,BOOK_AUTHOR,IS_AVAILABLE,\n"+
+        "IS_RESERVED,BOOK_SHELVE_ID, BOOK_EDITION,LIST_DATE,LIST_TIME \n"+
+        ") VALUES(@Id,@Isbn,@BookName,@BookDescription,@BookCoverUrl,@GenreId,@CreatedBy,@BookAuthor,@IsAvailable,@IsReserved,@BookShelveId,@BookEdition,@ListDate,@ListTime)";
+        // :::::::::::
         MySqlCommand command;
-        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
-        command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
+        command = new MySqlCommand(queryStatement,this.connection);
         command.Prepare();
-       // command.Parameters.AddWithValue("@Id", Id);
-       
-        //using var command = new MySqlCommand(query,this. connection);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            //var book=new Book();
-            book.Id=reader.GetInt32(0);
-            book.Isbn=reader.GetString(1);
-            book.BookName=reader.GetString(2);
-            book.BookDescription=reader.GetString(3);
-            book.BookCoverUrl=reader.GetString(4);
-            book.GenreId=reader.GetInt32(5);
-            book.CreatedBy=reader.GetInt32(6);
-            book.BookAuthor=reader.GetString(7);
-            book.IsAvailable=reader.GetInt32(8);
-            book.IsReserved=reader.GetInt32(9);
-            book.BookShelveId=reader.GetInt32(10);
-            book.BookEdition=reader.GetString(11);
-            book.ListDate =reader.GetString(12);
-            book.ListTime =reader.GetString(13);
-            Console.WriteLine(book);
-            return book;
-        }else return new Book();
+        command.Parameters.AddWithValue("@Id", null);
+        command.Parameters.AddWithValue("@Isbn", book.Isbn);
+        command.Parameters.AddWithValue("@BookName", book.BookName);
+        command.Parameters.AddWithValue("@BookDescription", book.BookDescription);
+        command.Parameters.AddWithValue("@BookCoverUrl", book.BookCoverUrl);
+        command.Parameters.AddWithValue("@GenreId", book.GenreId);
+        command.Parameters.AddWithValue("@CreatedBy", book.CreatedBy);
+        command.Parameters.AddWithValue("@BookAuthor", book.BookAuthor);
+        command.Parameters.AddWithValue("@IsAvailable", book.IsAvailable);
+        command.Parameters.AddWithValue("@IsReserved", book.IsReserved);
+        command.Parameters.AddWithValue("@BookShelveId", book.BookShelveId);
+        command.Parameters.AddWithValue("@BookEdition", book.BookEdition);
+        command.Parameters.AddWithValue("@ListDate", book.ListDate);
+        command.Parameters.AddWithValue("@ListTime", book.ListTime);
+
+        command.ExecuteNonQuery();
+        // :::::::::::::::: 
+        return Ok(new Book());
+      
     }
 
      // ::::::::::::::::::::: add book information
     [HttpPost("reserve-book")]
-    public Book ReserveBook(ReservedBooks reservedBooks)
+    public  IActionResult ReserveBook(ReservedBooks reservedBooks)
     {
         Console.WriteLine("reserve book");
         // :::::::::::::::: Create a list of books
@@ -194,38 +222,22 @@ public class BooksController : ControllerBase
 
      // ::::::::::::::::::::: add book information
     [HttpPost("issue-book")]
-    public Book IssueBook(IssuedBooks issuedBooks)
+    public  IActionResult IssueBook(IssuedBooks issuedBooks)
     {
         Console.WriteLine("issue book");
         // :::::::::::::::: Create a list of books
-        MySqlCommand command;
-        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
-        command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
-        command.Prepare();
-        //command.Parameters.AddWithValue("@Id", Id);
-       
-        //using var command = new MySqlCommand(query,this. connection);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            var book=new Book();
-         
-
-            Console.WriteLine(book);
-            return book;
-        }else return new Book();
+     return new Book();
     }
     // ::::::::::::::::::::: update book information
     [HttpPut ("update-book")]
-    public Book UpdateBook(int Id)
+    public  IActionResult UpdateBook(int Id)
     {
         Console.WriteLine("get book");
         // :::::::::::::::: Create a list of books
         MySqlCommand command;
         //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
         command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
+            "SELECT * FROM books WHERE books.BOOK_ID=@Id",this.connection);
         command.Prepare();
         command.Parameters.AddWithValue("@Id", Id);
        
@@ -240,7 +252,7 @@ public class BooksController : ControllerBase
     }
     // :::::::::::::::::: delete book
     [HttpDelete("delete-book/{Id}")]
-    public Book DeleteBook(int Id)
+    public  IActionResult DeleteBook(int Id)
     {
         Console.WriteLine("get book");
         // :::::::::::::::: Create a list of books

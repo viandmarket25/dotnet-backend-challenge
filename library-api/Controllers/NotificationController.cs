@@ -151,7 +151,7 @@ public class NotificationsController : ControllerBase
             };
             return Ok(requestResponse); 
         }else{
-             requestResponse=new RequestResponse{
+            requestResponse=new RequestResponse{
                 Message="failed, Could not delete",
                 Result= notifications,
                 Status="failed",
