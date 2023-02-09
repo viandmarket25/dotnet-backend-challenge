@@ -91,25 +91,24 @@ public class NotificationsController : ControllerBase
     }
     // ::::::::::::::::::::: add book information
     [HttpPost("add-notification")]
-    public  IActionResult AddNotification(Notification  notification)
+    public IActionResult AddNotification(Notification  notification)
     {
         // :::::::::::::::::
         Console.WriteLine("add new notification");
-        var queryStatement = "INSERT INTO shelves( \n"+
+        var queryStatement = "INSERT INTO notifications( \n"+
         "ID, TITLE, BODY, IS_READ, CUSTOMER_ID,DATE_,TIME_)\n"+
-        " VALUES (@Id,@Name,@Description)";
+        " VALUES (@Id,@Title,@Description)";
         // :::::::::::
         MySqlCommand command;
         command = new MySqlCommand(queryStatement,this.connection);
         command.Prepare();
         command.Parameters.AddWithValue("@Id", null);
-        command.Parameters.AddWithValue("@Title", notification.Name);
-        command.Parameters.AddWithValue("@Body", notification.Description);
-        command.Parameters.AddWithValue("@IsRead", null);
-        command.Parameters.AddWithValue("@CustomerId", notification.Name);
-        command.Parameters.AddWithValue("@Date_", notification.Description);
-        command.Parameters.AddWithValue("@Time_", notification.Description);
-
+        command.Parameters.AddWithValue("@Title", notification.Title);
+        command.Parameters.AddWithValue("@Body", notification.Body);
+        command.Parameters.AddWithValue("@IsRead", notification.IsRead);
+        command.Parameters.AddWithValue("@CustomerId", notification.CustomerId);
+        command.Parameters.AddWithValue("@Date_", notification.Date_);
+        command.Parameters.AddWithValue("@Time_", notification.Time_);
 
         command.ExecuteNonQuery();
         // :::::::::::::::: 
@@ -120,17 +119,40 @@ public class NotificationsController : ControllerBase
                 Code="200"
         };
         return Ok(requestResponse);
-
-
  
     }
     // ::::::::::::::::::::: update notification read
     [HttpPut ("read-notification")]
-    public  IActionResult ReadNotification(int Id)
+    public  IActionResult ReadNotification(int IsRead)
     {
         Console.WriteLine("read notification");
         // :::::::::::::::: Create a list of books
-        return new Notification();
+        MySqlCommand command;
+        List<dynamic> notifications=new List<dynamic>();
+        var notification = new Notification();
+        command  = new MySqlCommand(
+            "UPDATE notifications SET notifications.IS_READ=@IsRead",this.connection);
+        command.Prepare();
+        command.Parameters.AddWithValue("@IsRead", IsRead);
+        using var reader = command.ExecuteReader();
+        if (command.ExecuteNonQuery()>0){
+            // :::::::::::::: Create a book Object to hold db data
+            requestResponse=new RequestResponse{
+                Message="success",
+                Result= notifications,
+                Status="success",
+                Code="200"
+            };
+            return Ok(requestResponse); 
+        }else{
+             requestResponse=new RequestResponse{
+                Message="failed, Could not delete",
+                Result= notifications,
+                Status="failed",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }
     
     }
     // :::::::::::::::::: delete notification
@@ -138,8 +160,31 @@ public class NotificationsController : ControllerBase
     public  IActionResult CustomerDeleteBook(int Id)
     {
         Console.WriteLine("delete notification");
-        // :::::::::::::::: Create a list of books
-        return new Notification();
+        // :::::::::::::::: delete notification
+        MySqlCommand command;
+        List<dynamic> shelves=new List<dynamic>();
+        command  = new MySqlCommand(
+            "DELETE FROM notifications WHERE notifications.ID=@Id",this.connection);
+        command.Prepare();
+        command.Parameters.AddWithValue("@Id", Id);
+        if (command.ExecuteNonQuery()>0){
+            // :::::::::::::: shelf reccord has been deleted
+            requestResponse=new RequestResponse{
+                Message="success",
+                Result= shelves,
+                Status="success",
+                Code="200"
+            };
+            return Ok(requestResponse);  
+        }else{
+            requestResponse=new RequestResponse{
+                Message="failed, Could not delete",
+                Result= shelves,
+                Status="failed",
+                Code="200"
+            };
+            return Ok(requestResponse);
+        }
      
     }
    
