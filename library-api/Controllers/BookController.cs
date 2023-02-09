@@ -190,7 +190,6 @@ public class BooksController : ControllerBase
         command.Parameters.AddWithValue("@BookEdition", book.BookEdition);
         command.Parameters.AddWithValue("@ListDate", book.ListDate);
         command.Parameters.AddWithValue("@ListTime", book.ListTime);
-
         command.ExecuteNonQuery();
         // :::::::::::::::: 
         return Ok(new Book());
@@ -203,51 +202,51 @@ public class BooksController : ControllerBase
     {
         Console.WriteLine("reserve book");
         // :::::::::::::::: Create a list of books
-        MySqlCommand command;
-        //string query = "SELECT * FROM books WHERE books.BOOK_ID== @Id;";
-        command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
-        command.Prepare();
-        //command.Parameters.AddWithValue("@Id", Id);
-       
-        //using var command = new MySqlCommand(query,this. connection);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            var book=new Book();
-           
-            Console.WriteLine(book);
+        BookIsReserved bookIsReserved=new BookIsReserved();
+        BookIsIssued bookIsIssued = new BookIsIssued();
+        BookIsReservedBySameUser bookIsReservedBySameUser = new BookIsReservedBySameUser();
+        // :::::::: check is book is available
+        if(bookIsIssued.checkBookIsIssued(issueReserveBook.BookId)){
+            // ::::::::::: check if it has not been reserved,
+            if(!bookIsReserved.checkBookIsReserved(issueReserveBook.BookId)){
+                // ::::::::: if book is not reserved
+                // ::::::::: reserve book
+                Console.WriteLine("reserve book");
+                var queryStatement = "INSERT INTO reserved_books( \n"+
+                "ID, RESERVED_BY, RESERVED_FOR,BOOK_ID,RESERVE_EXPIRY_DATE,RESERVE_EXPIRY_TIME,\n"+
+                "RESERVE_DATE, RESERVE_TIME,\n"+
+                ") VALUES(@Id,@ReservedBy,@ReservedFor,@BookId,@ReserveExpiryDate,@ReserveExpiryTime,@ReserveDate,@ReserveTime)";
+                // :::::::::::
+                var currentDate = DateOnly.FromDateTime(DateTime.Now);
+                var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+                // ::::::::: add 24 hours
+                var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)); 
+                var expTime = new TimeOnly(08, 00);
+                MySqlCommand command;
+                command = new MySqlCommand(queryStatement,this.connection);
+                command.Prepare();
+                command.Parameters.AddWithValue("@Id", null);
+                command.Parameters.AddWithValue("@Reservedby", issueReserveBook.UserId);
+                command.Parameters.AddWithValue("@ReservedFor", issueReserveBook.UserId);
+                command.Parameters.AddWithValue("@BookId", issueReserveBook.BookId);
+                command.Parameters.AddWithValue("@ReserveExpiryDate", expDate);
+                command.Parameters.AddWithValue("@ReserveExpiryTime", expTime);
+                command.Parameters.AddWithValue("@ReserveDate", expDate);
+                command.Parameters.AddWithValue("@ReserveTime", currentTime);
+        
+                command.ExecuteNonQuery();
+                // :::::::::::::::: set book to reserved
+                SetBookReserved setBookReserved = new SetBookReserved();
+                setBookReserved.setReserved(issueReserveBook.BookId);
+                return Ok(new Book());
+            }
+        }else{
+            // :::::::::::: book has already been issued
+            return Ok(new Book());
 
+        }
 
-           return Ok(new Book());
-        }else return Ok(new Book());
     }
-
-    // ::::::::::::::::::::: add book information
-    [HttpPost("return-book")]
-    public  IActionResult ReturnBook(ReservedBooks reservedBooks)
-    {
-        Console.WriteLine("reserve book");
-        // :::::::::::::::: Create a list of books
-        MySqlCommand command;
-        command  = new MySqlCommand(
-            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
-        command.Prepare();
-        //command.Parameters.AddWithValue("@Id", Id);
-       
-        //using var command = new MySqlCommand(query,this. connection);
-        using var reader = command.ExecuteReader();
-        if (reader.Read()){
-            // :::::::::::::: Create a book Object to hold db data
-            var book=new Book();
-           
-            Console.WriteLine(book);
-
-
-           return Ok(new Book());
-        }else return Ok(new Book());
-    }
-
 
      // ::::::::::::::::::::: add book information
     [HttpPost("issue-book")]
@@ -329,6 +328,34 @@ public class BooksController : ControllerBase
         }
         return Ok(new Book());
     }
+
+
+    // ::::::::::::::::::::: add book information
+    [HttpPost("return-book")]
+    public  IActionResult ReturnBook(ReservedBooks reservedBooks)
+    {
+        Console.WriteLine("reserve book");
+        // :::::::::::::::: Create a list of books
+        MySqlCommand command;
+        command  = new MySqlCommand(
+            "SELECT * FROM books WHERE  books.BOOK_ID=@Id",this.connection);
+        command.Prepare();
+        //command.Parameters.AddWithValue("@Id", Id);
+       
+        //using var command = new MySqlCommand(query,this. connection);
+        using var reader = command.ExecuteReader();
+        if (reader.Read()){
+            // :::::::::::::: Create a book Object to hold db data
+            var book=new Book();
+           
+            Console.WriteLine(book);
+
+
+           return Ok(new Book());
+        }else return Ok(new Book());
+    }
+
+
     // ::::::::::::::::::::: update book information
     [HttpPut ("update-book")]
     public  IActionResult UpdateBook(int Id)
