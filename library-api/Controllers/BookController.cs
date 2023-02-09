@@ -16,7 +16,7 @@ public class BooksController : ControllerBase
 {
     public  MySqlConnection  connection;
     private readonly ILogger<BooksController> _logger;
-        private IUserService _userService;
+    private IUserService _userService;
     private RequestResponse requestResponse;
   
     public BooksController(ILogger<BooksController> logger,IUserService userService)
@@ -25,7 +25,6 @@ public class BooksController : ControllerBase
         mysqlConnection.InitMysqlConnectionPipe ();
         this. connection = mysqlConnection.GetMysqlConnectionPipe();
         _logger = logger;
-        //return _logger  ;
     }
     // :::::::::::::::::::: get all book
     [HttpGet("books")]
@@ -185,8 +184,8 @@ public class BooksController : ControllerBase
         command.Parameters.AddWithValue("@GenreId", book.GenreId);
         command.Parameters.AddWithValue("@CreatedBy", book.CreatedBy);
         command.Parameters.AddWithValue("@BookAuthor", book.BookAuthor);
-        command.Parameters.AddWithValue("@IsAvailable", book.IsAvailable);
-        command.Parameters.AddWithValue("@IsReserved", book.IsReserved);
+        command.Parameters.AddWithValue("@IsAvailable",1);
+        command.Parameters.AddWithValue("@IsReserved", 0);
         command.Parameters.AddWithValue("@BookShelveId", book.BookShelveId);
         command.Parameters.AddWithValue("@BookEdition", book.BookEdition);
         command.Parameters.AddWithValue("@ListDate", book.ListDate);
@@ -198,7 +197,7 @@ public class BooksController : ControllerBase
       
     }
 
-     // ::::::::::::::::::::: add book information
+    // ::::::::::::::::::::: add book information
     [HttpPost("reserve-book")]
     public  IActionResult ReserveBook(ReservedBooks reservedBooks)
     {
@@ -269,8 +268,10 @@ public class BooksController : ControllerBase
                 "DATE_ISSUED,TIME_ISSUED,RETURN_DATE,RETURN_TIME,\n"+
                 ") VALUES(@Id,@IssuedBy,@Issuedto,@BookId,@ExpiryDate,@DateIssued,@TimeIssued,@ReturnDate,@ReturnTime)";
                 // :::::::::::
-
-
+                var currentDate = DateOnly.FromDateTime(DateTime.Now);
+                var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+                var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)); 
+                var expTime = new TimeOnly(08, 00);
                 MySqlCommand command;
                 command = new MySqlCommand(queryStatement,this.connection);
                 command.Prepare();
@@ -278,19 +279,47 @@ public class BooksController : ControllerBase
                 command.Parameters.AddWithValue("@Issuedby", issueReserveBook.UserId);
                 command.Parameters.AddWithValue("@IssuedTo",  issueReserveBook.UserId);
                 command.Parameters.AddWithValue("@BookId",  issueReserveBook.BookId);
-                command.Parameters.AddWithValue("@ExpiryDate", book.BookCoverUrl);
-                command.Parameters.AddWithValue("@DateIssued", book.GenreId);
-                command.Parameters.AddWithValue("@TimeIssued", book.CreatedBy);
-                command.Parameters.AddWithValue("@ReturnDate", book.BookAuthor);
-                command.Parameters.AddWithValue("@ReturnTime", book.IsAvailable);
-    
+                command.Parameters.AddWithValue("@ExpiryDate", expDate);
+                command.Parameters.AddWithValue("@DateIssued", currentDate);
+                command.Parameters.AddWithValue("@TimeIssued", currentTime);
+                command.Parameters.AddWithValue("@ReturnDate", expDate);
+                command.Parameters.AddWithValue("@ReturnTime", expTime);
                 command.ExecuteNonQuery();
-                // :::::::::::::::: 
+                // :::::::::::::::: set book to unavailable
+                SetBookAvailable setBookAvailable = new SetBookAvailable();
+                setBookAvailable.setUnAvailable(issueReserveBook.BookId);
                 return Ok(new Book());
 
             }else if(bookIsReserved.checkBookIsReserved(issueReserveBook.BookId) && bookIsReservedBySameUser.checkBookIsReservedBySameUser(issueReserveBook) ){
                 // :::::::: book is reserved but same user wants to usee
-
+                // ::::::::: issue book
+                Console.WriteLine("issue book");
+                var queryStatement = "INSERT INTO issued_books( \n"+
+                "ID, ISSUED_BY, ISSUED_TO,BOOK_ID,EXPIRY_DATE,\n"+
+                "DATE_ISSUED,TIME_ISSUED,RETURN_DATE,RETURN_TIME,\n"+
+                ") VALUES(@Id,@IssuedBy,@Issuedto,@BookId,@ExpiryDate,@DateIssued,@TimeIssued,@ReturnDate,@ReturnTime)";
+                // :::::::::::
+                var currentDate = DateOnly.FromDateTime(DateTime.Now);
+                var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+                var expDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)); 
+                var expTime = new TimeOnly(08, 00);
+                MySqlCommand command;
+                command = new MySqlCommand(queryStatement,this.connection);
+                command.Prepare();
+                command.Parameters.AddWithValue("@Id", null);
+                command.Parameters.AddWithValue("@Issuedby", issueReserveBook.UserId);
+                command.Parameters.AddWithValue("@IssuedTo",  issueReserveBook.UserId);
+                command.Parameters.AddWithValue("@BookId",  issueReserveBook.BookId);
+                command.Parameters.AddWithValue("@ExpiryDate", expDate);
+                command.Parameters.AddWithValue("@DateIssued", currentDate);
+                command.Parameters.AddWithValue("@TimeIssued", currentTime);
+                command.Parameters.AddWithValue("@ReturnDate", expDate);
+                command.Parameters.AddWithValue("@ReturnTime", expTime);
+                command.ExecuteNonQuery();
+                // :::::::::::::::: set book to unavailable
+                SetBookAvailable setBookAvailable = new SetBookAvailable();
+                setBookAvailable.setUnAvailable(issueReserveBook.BookId);
+                return Ok(new Book());
 
             }
         }else{
