@@ -1,7 +1,6 @@
-# VS Code Readme Editor 📝
+# Dotnet Backend Engineer Challenge
 
-Import your existing Readme using the import button on the top right corner of the navbar,
-or create a new Readme from scratch by typing in the editor.
+Backend task demonstrating Understanding of Software Architeture using Martha's Book Library
 
 ## Get Started 🚀
 
